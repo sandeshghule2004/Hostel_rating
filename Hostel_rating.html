@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PG/Hostel Food Rating App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f5f5;
+    }
+
+    header {
+      background: #4CAF50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #4CAF50;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    .rating {
+      color: orange;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🍽️ PG/Hostel Food Rating App</h1>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>Add Review</h2>
+    <input type="text" id="hostelName" placeholder="Hostel/PG Name">
+    <select id="rating">
+      <option value="">Select Rating</option>
+      <option value="1">⭐ 1</option>
+      <option value="2">⭐⭐ 2</option>
+      <option value="3">⭐⭐⭐ 3</option>
+      <option value="4">⭐⭐⭐⭐ 4</option>
+      <option value="5">⭐⭐⭐⭐⭐ 5</option>
+    </select>
+    <textarea id="review" placeholder="Write your review..."></textarea>
+    <button onclick="addReview()">Submit</button>
+  </div>
+
+  <div id="reviews"></div>
+
+</div>
+
+<script>
+  let reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+
+  function displayReviews() {
+    const container = document.getElementById('reviews');
+    container.innerHTML = '';
+
+    reviews.forEach((r, index) => {
+      container.innerHTML += `
+        <div class="card">
+          <h3>${r.name}</h3>
+          <p class="rating">${'⭐'.repeat(r.rating)}</p>
+          <p>${r.text}</p>
+          <button onclick="deleteReview(${index})">Delete</button>
+        </div>
+      `;
+    });
+  }
+
+  function addReview() {
+    const name = document.getElementById('hostelName').value;
+    const rating = document.getElementById('rating').value;
+    const text = document.getElementById('review').value;
+
+    if (!name || !rating || !text) {
+      alert('Please fill all fields');
+      return;
+    }
+
+    reviews.push({ name, rating, text });
+    localStorage.setItem('reviews', JSON.stringify(reviews));
+
+    document.getElementById('hostelName').value = '';
+    document.getElementById('rating').value = '';
+    document.getElementById('review').value = '';
+
+    displayReviews();
+  }
+
+  function deleteReview(index) {
+    reviews.splice(index, 1);
+    localStorage.setItem('reviews', JSON.stringify(reviews));
+    displayReviews();
+  }
+
+  displayReviews();
+</script>
+
+</body>
+</html>
